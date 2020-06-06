@@ -1,0 +1,23 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: api-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: api-deployment
+  template:
+    metadata:
+      labels:
+        component: api-deployment
+    spec:
+      containers:
+        - name: api
+          image: gcr.io/gdax-dnn/ha-api/api:v0.0.7
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /healthy
+              port: 5000
