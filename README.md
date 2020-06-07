@@ -11,11 +11,11 @@ cd docker/api
 
 ## deploy 
 
-``
+```
 cd scripts
 . spin-up-cluster.sh
 . deploy-k8s.sh
-``
+```
 
 ## demo 
 
