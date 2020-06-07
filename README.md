@@ -1,6 +1,6 @@
 # highly-available-api
 
-Deploys a load-balanced API behind an ingress and NodePort service. 
+Deploys a load-balanced API behind an ingress and `NodePort` service. The ingress enables additional configuration. If the ingress' configurability is unnecessary, the same can be achieved through a `LoadBalancer` service without an ingress. 
 
 ## build 
 
