@@ -2,8 +2,10 @@ kind: Service
 apiVersion: v1
 metadata:
   name: demo-service
+  annotations:
+    cloud.google.com/load-balancer-type: "Internal"
 spec:
-  type: NodePort
+  type: LoadBalancer 
   selector:
     component: api-deployment
   ports:
