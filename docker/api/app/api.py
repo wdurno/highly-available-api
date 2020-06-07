@@ -8,7 +8,7 @@ api_id =  ''.join(random.choice(letters) for i in range(10))
 
 @app.route('/')
 def hello():
-    return api_id
+    return str(api_id) + '\n'
 
 
 @app.route('/healthy')

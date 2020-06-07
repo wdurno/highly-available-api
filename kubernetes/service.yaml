@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: demo-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     component: api-deployment
   ports:

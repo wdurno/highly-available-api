@@ -5,11 +5,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  rules:
-  - http:
-      paths:
-      - path: /demo
-        #pathType: Prefix
-        backend:
-          serviceName: demo-service 
-          servicePort: 8080
+  backend:
+    serviceName: demo-service 
+    servicePort: 8080
