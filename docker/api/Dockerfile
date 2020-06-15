@@ -8,7 +8,8 @@ RUN apk --update --no-cache add \
         curl \
         openssl \
         python3 \
-        py3-pip && \
+        py3-pip \
+        py3-psycopg2 && \
     pip install -r /app/requirements.txt 
 
 ENTRYPOINT ["bash", "/app/entrypoint.sh"]

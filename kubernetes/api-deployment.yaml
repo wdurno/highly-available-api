@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: gcr.io/gdax-dnn/ha-api/api:v0.0.8
+          image: gcr.io/gdax-dnn/ha-api/api:v0.0.10
           ports:
             - containerPort: 5000
           readinessProbe:

@@ -1,3 +1,3 @@
-IMAGE_NAME=gcr.io/gdax-dnn/ha-api/api:v0.0.8
+IMAGE_NAME=gcr.io/gdax-dnn/ha-api/api:v0.0.10
 docker build . -t $IMAGE_NAME --rm=false 
 docker push $IMAGE_NAME
