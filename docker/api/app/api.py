@@ -17,6 +17,7 @@ def hello():
     visits = cur.fetchone()[0]  
     ## update total visits 
     cur.execute("UPDATE visits SET total = total + 1") 
+    conn.commit() 
     conn.close() 
     return 'pod name: ' + str(api_id) + '\ntotal visits: ' + str(visits) + '\n'
 
