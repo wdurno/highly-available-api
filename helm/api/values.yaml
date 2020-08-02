@@ -1,0 +1,7 @@
+
+## Number of API pods 
+apiReplicaCount: 1
+
+## Name of GCP project 
+project: gdax-dnn
+
