@@ -24,13 +24,14 @@ After the ingress is fully deployed (which can take several minutes), you'll be 
 ```
 cd scripts
 . 3-ping.sh
-# returns "jigsbiktaf"
+# pod name: xkymgqrrhp
+# total visits: 0
 . 3-ping.sh 
-# piaxzmukdm
+# pod name: rhjsbkdwad
+# total visits: 1
 . 3-ping.sh 
-# pjtptrnzib
-. 3-ping.sh
-# piaxzmukdm
+# pod name: xkymgqrrhp
+# total visits: 2
 ```
 
 ## clean-up 
