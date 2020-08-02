@@ -13,8 +13,8 @@ cd docker/api
 
 ```
 cd scripts
-. spin-up-cluster.sh
-. deploy-k8s.sh
+. 1-spin-up.sh
+. 2-init-db.sh
 ```
 
 ## demo 
@@ -23,13 +23,19 @@ After the ingress is fully deployed (which can take several minutes), you'll be 
 
 ```
 cd scripts
-. ping.sh
+. 3-ping.sh
 # returns "jigsbiktaf"
-. ping.sh 
+. 3-ping.sh 
 # piaxzmukdm
-. ping.sh 
+. 3-ping.sh 
 # pjtptrnzib
-. ping.sh
+. 3-ping.sh
 # piaxzmukdm
+```
+
+## clean-up 
+
+```
+. 4-spin-down.sh 
 ```
 
