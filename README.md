@@ -34,6 +34,23 @@ cd scripts
 # total visits: 2
 ```
 
+## Inspect logs with Kibana 
+
+```
+GET logstash-2020.08.10/_search
+{
+    "_source": ["pod_name", "log"],
+    "query": {
+    "query_string": {
+      "query": "healthy",
+      "default_field": "log"
+    }
+  },
+  "from": 0,
+  "size": 10
+}
+```
+
 ## clean-up 
 
 ```
