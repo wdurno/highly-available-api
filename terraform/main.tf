@@ -1,5 +1,7 @@
-provider "google" {
- credentials = file("../../service-account.json") 
- project     = "gdax-dnn"
- region      = "us-central1-a"
+provider "azurerm" {
+  version = "=2.5.0"
+  features {}
+  
+  subscription_id = var.subscription_id
+  tenant_id       = var.tenant_id
 }
