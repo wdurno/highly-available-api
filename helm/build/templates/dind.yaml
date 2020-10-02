@@ -5,7 +5,7 @@ metadata:
 spec: 
     containers: 
       - name: build
-        image: docker:1.12.6-dind
+        image: docker:19.03.12-dind
         securityContext: 
             privileged: true 
         volumeMounts: 
