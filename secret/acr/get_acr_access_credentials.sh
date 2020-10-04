@@ -4,5 +4,5 @@ then
   exit 1
 fi
 
-az acr login --name AzureContainerRegsitry1 --expose-token | \
+az acr login --name HaApiAzureContainerRegsitry1 --expose-token | \
 python unpack_acr_json.py  
