@@ -1,5 +1,5 @@
 kind: Deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 metadata:
   name: api-deployment
 spec:
@@ -21,7 +21,7 @@ spec:
             httpGet:
               path: /healthy
               port: 5000
-        - name: oauth2_proxy 
+        - name: oauth2-proxy 
           image: quay.io/oauth2-proxy/oauth2-proxy:v6.1.1 
           ports:
             - containerPort: 4180
