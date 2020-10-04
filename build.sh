@@ -15,8 +15,15 @@ terraform init
 . terraform-apply.sh
 cd ${repo_dir} 
 
+echo -e ${GREEN}docker login...${NC}
+. ${repo_dir}/secret/acr/get_acr_access_credentials.sh
+
 echo -e ${GREEN}getting .kube config...${NC}
 . ${repo_dir}/scripts/get-kubeconfig-azure.sh 
+
+echo -e ${GREEN}generate tls cert...${NC}
+. ${repo_dir}/secret/cert/make-cert.sh
+. ${repo_dir}/secret/cert/upload-cert.sh
 
 echo -e ${GREEN}deploying build env...${NC} 
 . ${repo_dir}/scripts/helm-deploy-build.sh 

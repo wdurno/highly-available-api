@@ -5,4 +5,4 @@ then
 fi
 
 az acr login --name HaApiAzureContainerRegsitry1 --expose-token | \
-python unpack_acr_json.py  
+python ${repo_dir}/secret/acr/unpack_acr_json.py  

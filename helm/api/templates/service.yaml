@@ -2,8 +2,6 @@ kind: Service
 apiVersion: v1
 metadata:
   name: demo-service
-  annotations:
-    cloud.google.com/load-balancer-type: "Internal"
 spec:
   type: LoadBalancer 
   selector:
@@ -11,4 +9,4 @@ spec:
   ports:
     - name: api-deployment
       port: 8080
-      targetPort: 5000
+      targetPort: 4180

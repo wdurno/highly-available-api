@@ -1,7 +1,11 @@
 
 ## Number of API pods 
-apiReplicaCount: 1
+replicas: 3
 
 ## Name of GCP project 
-project: gdax-dnn
+image: ""
+
+##azure oauth2
+client_id: ""
+client_secret: ""
 
