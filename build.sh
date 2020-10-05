@@ -21,6 +21,12 @@ echo -e ${GREEN}docker login...${NC}
 echo -e ${GREEN}getting .kube config...${NC}
 . ${repo_dir}/scripts/get-kubeconfig-azure.sh 
 
+echo -e ${GREEN}upload registry access credentials...${NC}
+. ${repo_dir}/scripts/deploy-secrets.sh
+
+echo -e ${GREEN}generate cookie token...${NC}
+. ${repo_dir}/secret/cookie/make-cookie-token.sh
+
 echo -e ${GREEN}generate tls cert...${NC}
 . ${repo_dir}/secret/cert/make-cert.sh
 . ${repo_dir}/secret/cert/upload-cert.sh
