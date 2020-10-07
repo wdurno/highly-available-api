@@ -2,8 +2,8 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: demo-ingress
-    annotations:
-      kubernetes.io/ingress.class: azure/application-gateway
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
 spec:
   rules:
     - http:
@@ -11,10 +11,4 @@ spec:
           - path: /
             backend:
               serviceName: demo-service 
-              servicePort: 8080
-    - https:
-        paths:
-          - path: /
-            backend:
-              serviceName: demo-service
               servicePort: 8080

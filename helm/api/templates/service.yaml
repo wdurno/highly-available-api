@@ -6,6 +6,5 @@ spec:
   selector:
     app: api-deployment
   ports:
-    - name: api-deployment
-      port: 8080
+    - port: 8080
       targetPort: 4180
