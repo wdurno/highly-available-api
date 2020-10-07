@@ -6,11 +6,11 @@ spec:
   replicas: {{ .Values.replicas }} 
   selector:
     matchLabels:
-      component: api-deployment
+      app: api-deployment
   template:
     metadata:
       labels:
-        component: api-deployment
+        app: api-deployment
     spec:
       containers:
         - name: api

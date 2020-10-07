@@ -3,9 +3,8 @@ apiVersion: v1
 metadata:
   name: demo-service
 spec:
-  type: LoadBalancer 
   selector:
-    component: api-deployment
+    app: api-deployment
   ports:
     - name: api-deployment
       port: 8080
