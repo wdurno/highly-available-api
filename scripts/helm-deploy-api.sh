@@ -8,4 +8,5 @@ helm upgrade api \
 	--set image=${IMAGE_NAME} \
 	--set client_id=${highly_available_api_client_id} \
 	--set client_secret=${highly_available_api_client_secret} \
-        --set cookie_token=${COOKIE}
+        --set cookie_token=${COOKIE} \
+	--set web_domain=${highly_available_api_host} 

@@ -23,6 +23,9 @@ spec:
               port: 5000
         - name: oauth2-proxy 
           image: quay.io/oauth2-proxy/oauth2-proxy:v6.1.1 
+          volumeMounts:
+            - name: tls-secret
+              mountPath: /tls
           ports:
             - containerPort: 4180
           command: 
@@ -33,8 +36,12 @@ spec:
             - "--client-id={{ .Values.client_id }}"
             - "--client-secret={{ .Values.client_secret }}"
             - "--cookie-secret={{ .Values.cookie_token }}"
-            - "--email-domain=*"
-            #- "--tls-cert-file=/path/to/cert.pem" TODO add tls 
-            #- "--tls-key-file=/path/to/cert.key"
+            - "--email-domain={{ .Values.web_domain }}"
+            #- "--tls-cert-file=/tls/tls.crt"  
+            #- "--tls-key-file=/tls/tls.key"
       imagePullSecrets:
         - name: acr-creds
+      volumes:
+        - name: tls-secret
+          secret:
+            secretName: tls-secret

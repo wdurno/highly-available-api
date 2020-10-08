@@ -9,3 +9,6 @@ image: ""
 client_id: ""
 client_secret: ""
 cookie_token: ""
+
+## for tls
+web_domain: "*"
