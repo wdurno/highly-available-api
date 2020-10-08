@@ -53,4 +53,16 @@ if [ $? != 0 ]; then
 fi 
 
 echo -e ${GREEN}tearing-down build env...${NC} 
-. ${repo_dir}/scripts/helm-tear-down-build.sh 
+. ${repo_dir}/scripts/helm-tear-down-build.sh
+
+echo -e ${GREEN}deploying ingress controller...${NC} 
+. ${repo_dir}/scripts/deploy-nginx-controller.sh 
+
+echo -e ${GREEN}deploying api...${NC} 
+. ${repo_dir}/scripts/helm-deploy-api.sh 
+
+echo -e ${GREEN}waiting for database to deploy...${NC} 
+python ${repo_dir}/scripts/wait_for_deploy.py 
+
+echo -e ${GREEN}initializing database...${NC} 
+. ${repo_dir}/scripts/init-db.sh 
