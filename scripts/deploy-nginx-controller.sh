@@ -1,10 +1,13 @@
-# Create a namespace for ingress resources
+## docs:
+## https://docs.microsoft.com/en-us/azure/aks/ingress-basic
+
+## Create a namespace for ingress resources
 kubectl create namespace ingress-basic
 
-# Add the ingress-nginx repository
+## Add the ingress-nginx repository
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
-# Use Helm to deploy an NGINX ingress controller
+## Use Helm to deploy an NGINX ingress controller
 helm install nginx-ingress ingress-nginx/ingress-nginx \
     --namespace ingress-basic \
     --set controller.replicaCount=2 \
