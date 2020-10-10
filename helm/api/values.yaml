@@ -1,6 +1,6 @@
 
 ## Number of API pods 
-replicas: 3
+replicas: 1
 
 ## Name of GCP project 
 image: ""

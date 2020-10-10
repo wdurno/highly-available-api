@@ -1,0 +1,56 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1beta1
+metadata:
+  name: api-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kuberenetes.io/ssl-redirect: "true" 
+    nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start"
+    #nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+spec:
+  rules:
+    - host: {{ .Values.web_domain }} 
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: api-service
+              servicePort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: api-service
+spec:
+  selector:
+    app: api-deployment
+  ports:
+    - port: 8080
+      targetPort: 5000
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: api-deployment
+spec:
+  replicas: {{ .Values.replicas }} 
+  selector:
+    matchLabels:
+      app: api-deployment
+  template:
+    metadata:
+      labels:
+        app: api-deployment
+    spec:
+      containers:
+        - name: api
+          image: {{ .Values.image }}
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /healthy
+              port: 5000
+      imagePullSecrets:
+        - name: acr-creds
