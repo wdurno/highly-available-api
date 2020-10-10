@@ -58,6 +58,9 @@ echo -e ${GREEN}tearing-down build env...${NC}
 echo -e ${GREEN}deploying ingress controller...${NC} 
 . ${repo_dir}/scripts/deploy-nginx-controller.sh 
 
+echo -e ${GREEN}waiting for ingress controller to deploy...${NC} 
+python ${repo_dir}/scripts/wait_for_nginx.py 
+
 echo -e ${GREEN}deploying api...${NC} 
 . ${repo_dir}/scripts/helm-deploy-api.sh 
 
