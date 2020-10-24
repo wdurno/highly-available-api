@@ -12,5 +12,5 @@ RUN apk --update --no-cache add \
         py3-psycopg2 && \
     pip install -r /app/requirements.txt 
 
-ENTRYPOINT ["bash", "/app/entrypoint.sh"]
+WORKDIR /app
 

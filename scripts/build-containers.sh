@@ -11,3 +11,7 @@ cat $SERVER
 echo building api...
 cd ${repo_dir}/api 
 . docker-build-and-push.sh 
+
+echo building oauth2...
+cd ${repo_dir}/msal-auth
+. docker-build-and-push.sh 

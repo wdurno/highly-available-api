@@ -1,17 +1,26 @@
 import random
 import string
 import psycopg2 
-from flask import Flask
+import argparse 
+from flask import Flask, url_for, jsonify 
 from waitress import serve
+from auth import verify_oauth_token, redirect_to_login_and_return 
 app = Flask(__name__)
 
 letters = string.ascii_lowercase
 api_id =  ''.join(random.choice(letters) for i in range(10))
 
+parser = argparse.ArgumentParser(description='Increments and reports visits statelessly. Requires AAD authentication.') 
+parser.add_argument('--host', required=True, type=str, help='host name, ie. https://www.example.com, https:// required.') 
+parser.add_argument('--db-password', required=False, default='use-a-key-vault-next-time', help='the database password')
+
 @app.route('/')
-def hello():
+def index():
+    ## auth before proceeding 
+    if not verify_oauth_token():
+        return redirect_to_login_and_return(url_for('index')) 
     ## in prod design, keep connection alive and restart when unhealthy 
-    conn = psycopg2.connect(dbname="api", user="postgres", host="db", port="5432", password="use-a-key-vault-next-time")
+    conn = psycopg2.connect(dbname="api", user="postgres", host="db", port="5432", password=app.config.DB_PASSWORD)
     cur = conn.cursor() 
     ## get total visits 
     cur.execute("SELECT total FROM visits") 
@@ -20,13 +29,16 @@ def hello():
     cur.execute("UPDATE visits SET total = total + 1") 
     conn.commit() 
     conn.close() 
-    return 'pod name: ' + str(api_id) + '\ntotal visits: ' + str(visits) + '\n'
-
+    return jsonify({'pod-name': str(api_id), 'total-visits': str(visits)})
 
 @app.route('/healthy')
 def health():
     return "200", 200
 
 if __name__ == '__main__':
+    args = argparser.parse_args() 
+    app.config.update(
+            HOST=args.host,
+            DB_PASSWROD=args.db_password
+            )
     serve(app, host='0.0.0.0', port=5000) # production-grade serving  
-    #flask.run(host='0.0.0.0', port=5000) # more verbose, use in debugging

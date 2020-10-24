@@ -2,13 +2,16 @@
 ## Number of API pods 
 replicas: 1
 
-## Name of GCP project 
-image: ""
+## Container names  
+api_image: ""
+oauth2_image: "" 
 
-##azure oauth2
+## oauth2
 client_id: ""
 client_secret: ""
+tenant_id: ""
 cookie_token: ""
 
-## for tls
-web_domain: "*"
+## web domain, ie: www.example.com 
+host: ""
+

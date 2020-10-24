@@ -1,10 +1,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: api-service
+  name: oauth2-service
 spec:
   selector:
-    app: api-deployment
+    app: oauth2-deployment
   ports:
     - port: 8080
       targetPort: 5000
@@ -12,20 +12,20 @@ spec:
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: api-deployment
+  name: oauth2-deployment
 spec:
   replicas: {{ .Values.replicas }} 
   selector:
     matchLabels:
-      app: api-deployment
+      app: oauth2-deployment
   template:
     metadata:
       labels:
-        app: api-deployment
+        app: oauth2-deployment
     spec:
       containers:
-        - name: api
-          image: {{ .Values.api_image }}
+        - name: oauth2
+          image: {{ .Values.oauth2_image }}
           ports:
             - containerPort: 5000
           readinessProbe:
@@ -35,7 +35,10 @@ spec:
           command:
             - "python"
             - "-u"
-            - "api.py"
+            - "app.py"
+            - "--client-id={{ .Values.client_id }}"
+            - "--client-secret={{ .Values.client_secret }}"
+            - "--authority=https://login.microsoftonline.com/{{ .Values.tenant_id }}"
             - "--host=https://{{ .Values.host }}"
             - "--cookie-token={{ .Values.cookie_token }}"
       imagePullSecrets:

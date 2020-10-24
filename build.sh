@@ -44,8 +44,8 @@ fi
 echo -e ${GREEN}configuring build env...${NC}
 . ${repo_dir}/scripts/copy-to-builder.sh 
 
-echo -e ${GREEN}buidling...${NC} 
-kubectl exec -it build -- /bin/sh /build/highly-available-api/scripts/build-api.sh 
+echo -e ${GREEN}buidling containers...${NC} 
+kubectl exec -it build -- /bin/sh /build/highly-available-api/scripts/build-containers.sh 
 
 if [ $? != 0 ]; then 
   echo -e ${RED}api build failed!${NC} 
@@ -65,7 +65,7 @@ echo -e ${GREEN}deploying api...${NC}
 . ${repo_dir}/scripts/helm-deploy-api.sh 
 
 echo -e ${GREEN}waiting for database to deploy...${NC} 
-python ${repo_dir}/scripts/wait_for_deploy.py 
+python ${repo_dir}/scripts/wait_for_db.py 
 
 echo -e ${GREEN}initializing database...${NC} 
 . ${repo_dir}/scripts/init-db.sh 
