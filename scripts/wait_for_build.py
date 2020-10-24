@@ -1,7 +1,7 @@
 import os
 from time import sleep 
 
-wait=100
+wait=10
 
 for i in range(wait): 
     state = os.popen('kubectl get pods | grep build').read()

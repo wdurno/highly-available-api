@@ -7,13 +7,13 @@ from waitress import serve
 from auth import verify_oauth_token 
 
 app = Flask(__name__)
-Session(app)
 
 parser = argparse.ArgumentParser(description='Azure Active Directory authentication sidecar app') 
 parser.add_argument('--client-id', required=True, type=str, help='AAD client ID')
 parser.add_argument('--client-secret', required=True, type=str, help='AAD client secret') 
 parser.add_argument('--authority', required=True, type=str, help='AAD Oauth2 authority, example: https://login.microsoftonline.com/Enter_the_Tenant_Name_Here') 
 parser.add_argument('--host', required=True, type=str, help='host name, ie. https://www.host.com. Must start with https://') 
+parser.add_argument('--cookie-token', required=True, type=str, help='enables sessions thorugh signed cookies') 
 
 @app.route("/oauth2")
 def oauth2_index():
@@ -103,7 +103,7 @@ def _get_token_from_cache(scope=None):
         return result
 
 if __name__ == "__main__":
-    args = argparser.parse_args() 
+    args = parser.parse_args() 
     app.config.update(
             CLIENT_ID=args.client_id,
             CLIENT_SECRET=args.client_secret,
@@ -112,4 +112,5 @@ if __name__ == "__main__":
             REDIRECT_PATH='/oauth2/callback',
             SCOPE=[]  
             )
+    app.secret_key=args.cookie_token
     serve(app, host='0.0.0.0', port=5000)

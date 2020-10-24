@@ -12,6 +12,7 @@ api_id =  ''.join(random.choice(letters) for i in range(10))
 
 parser = argparse.ArgumentParser(description='Increments and reports visits statelessly. Requires AAD authentication.') 
 parser.add_argument('--host', required=True, type=str, help='host name, ie. https://www.example.com, https:// required.') 
+parser.add_argument('--cookie-token', required=True, type=str, help='enables sessions by signing cookies') 
 parser.add_argument('--db-password', required=False, default='use-a-key-vault-next-time', help='the database password')
 
 @app.route('/')
@@ -36,9 +37,10 @@ def health():
     return "200", 200
 
 if __name__ == '__main__':
-    args = argparser.parse_args() 
+    args = parser.parse_args() 
     app.config.update(
             HOST=args.host,
             DB_PASSWROD=args.db_password
             )
+    app.secret_key=args.cookie_token
     serve(app, host='0.0.0.0', port=5000) # production-grade serving  
