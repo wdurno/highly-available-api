@@ -1,6 +1,6 @@
 
 ## Number of API pods 
-replicas: 1
+replicas: 3
 
 ## Container names  
 api_image: ""
