@@ -19,9 +19,9 @@ parser.add_argument('--db-password', required=False, default='use-a-key-vault-ne
 def index():
     ## auth before proceeding 
     if not verify_oauth_token():
-        return redirect_to_login_and_return(url_for('index')) 
+        return redirect_to_login_and_return(app, url_for('index')) 
     ## in prod design, keep connection alive and restart when unhealthy 
-    conn = psycopg2.connect(dbname="api", user="postgres", host="db", port="5432", password=app.config.DB_PASSWORD)
+    conn = psycopg2.connect(dbname="api", user="postgres", host="db", port="5432", password=app.config['DB_PASSWORD'])
     cur = conn.cursor() 
     ## get total visits 
     cur.execute("SELECT total FROM visits") 
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     args = parser.parse_args() 
     app.config.update(
             HOST=args.host,
-            DB_PASSWROD=args.db_password
+            DB_PASSWORD=args.db_password
             )
     app.secret_key=args.cookie_token
     serve(app, host='0.0.0.0', port=5000) # production-grade serving  

@@ -5,8 +5,10 @@ import msal
 import argparse 
 from waitress import serve
 from auth import verify_oauth_token 
+from flask_session import Session
 
 app = Flask(__name__)
+sess = Session() 
 
 parser = argparse.ArgumentParser(description='Azure Active Directory authentication sidecar app') 
 parser.add_argument('--client-id', required=True, type=str, help='AAD client ID')
@@ -17,12 +19,21 @@ parser.add_argument('--cookie-token', required=True, type=str, help='enables ses
 
 @app.route("/oauth2")
 def oauth2_index():
-    logged_in = verify_oauth_token() 
+    'verifies login'
+    logged_in = False
+    if session.get('token_cache') is not None: 
+        ## Session is not a directionary, it only returns signed cookies.
+        ## A key error is thrown if not logged-in or a forgery is caught. 
+        logged_in = True 
     return jsonify({'logged_in': logged_in}) 
 
 @app.route("/oauth2/login")
 def login():
     session["state"] = str(uuid.uuid4())
+    ## Check for login-downstream arg 
+    login_downstream = request.args.get('login-downstream') 
+    if login_downstream is not None: 
+        session['login-downstream'] = login_downstream 
     ## Construct AAD login request and redirect 
     auth_url = _build_auth_url(scopes=[], state=session["state"])
     return redirect(auth_url) 
@@ -39,8 +50,8 @@ def authorized():
         ## requests token from AAD with auth code 
         result = _build_msal_app(cache=cache).acquire_token_by_authorization_code(
             request.args['code'],
-            scopes=app.config.SCOPE,  # Misspelled scope would cause an HTTP 400 error here
-            redirect_uri=url_for("authorized", _external=True))
+            scopes=app.config['SCOPE'],  # Misspelled scope would cause an HTTP 400 error here
+            redirect_uri=app.config['REDIRECT_URI'])
         if "error" in result:
             return jsonify(_format_error(result)) 
         session["user"] = result.get("id_token_claims")
@@ -48,10 +59,10 @@ def authorized():
         ## token provided by AAD
         ## saving token as a session cookie, meaning it is signed and stored client-side 
         _save_cache(cache)
-    login_downstream = session.get('login_downstream') 
+    login_downstream = session.get('login-downstream') 
     if login_downstream is not None: 
         ## clear downstream 
-        session['login_downstream'] = None 
+        session['login-downstream'] = None 
         ## redirect to login_downstream 
         return redirect(login_downstream) 
     return redirect(url_for("oauth2_index"))
@@ -60,8 +71,8 @@ def authorized():
 def logout():
     session.clear()  # Wipe out user and its token cache from session
     return redirect(  # Also logout from your tenant's web session
-        app.config.AUTHORITY + "/oauth2/v2.0/logout" +
-        "?post_logout_redirect_uri=" + url_for("oauth2_index", _external=True))
+        app.config['AUTHORITY'] + "/oauth2/v2.0/logout" +
+        "?post_logout_redirect_uri=" + app.config['REDIRECT_URI'])
 
 ## health endpoint isn't accessed from outside
 ## it's just for kubernetes 
@@ -84,14 +95,14 @@ def _save_cache(cache):
 
 def _build_msal_app(cache=None, authority=None):
     return msal.ConfidentialClientApplication(
-        app.config.CLIENT_ID, authority=authority or app.config.AUTHORITY,
-        client_credential=app.config.CLIENT_SECRET, token_cache=cache)
+        app.config['CLIENT_ID'], authority=authority or app.config['AUTHORITY'],
+        client_credential=app.config['CLIENT_SECRET'], token_cache=cache)
 
 def _build_auth_url(authority=None, scopes=None, state=None):
     return _build_msal_app(authority=authority).get_authorization_request_url(
         scopes or [],
         state=state or str(uuid.uuid4()),
-        redirect_uri=url_for("authorized", _external=True))
+        redirect_uri=app.config['REDIRECT_URI'])
 
 def _get_token_from_cache(scope=None):
     cache = _load_cache()  # This web app maintains one cache per session
@@ -109,8 +120,10 @@ if __name__ == "__main__":
             CLIENT_SECRET=args.client_secret,
             AUTHORITY=args.authority,
             HOST=args.host, 
-            REDIRECT_PATH='/oauth2/callback',
+            REDIRECT_URI=args.host + '/oauth2/callback',
+            SESSION_TYPE='filesystem', ## TODO use Redis to enable high availability 
+            SECRET_KEY=args.cookie_token,
             SCOPE=[]  
             )
-    app.secret_key=args.cookie_token
+    sess.init_app(app) 
     serve(app, host='0.0.0.0', port=5000)

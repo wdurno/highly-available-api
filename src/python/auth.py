@@ -1,29 +1,29 @@
-from flask import session, redirect, url_for 
+from flask import session, request, redirect, url_for 
+import urllib.parse 
+import requests
 
 def verify_oauth_token():
     '''
     Verifies that a user is indeed logged-in. 
     Returns `True` if logged-in, `False` otherwise. 
     '''
-    try:
-        ## This is not a dictionary, flask sessions store data in signed cookies. 
-        ## A key error is thrown if not logged in or a forgery is caught. 
-        _ = session['token_cache'] 
-        return True 
-    except KeyError:
-        ## User is not logged-in, time to redirect to login. 
-        return False 
+    ## get cookies 
+    cookies = dict(request.cookies) 
+    ## request local service 
+    r = requests.get('http://oauth2-service:8080/oauth2', cookies=cookies)
+    return r.json()['logged_in'] 
 
-def redirect_to_login_and_return(endpoint_path: str): 
+def redirect_to_login_and_return(app, endpoint_path: str): 
     '''
     Redirects a user to login. 
     After successful login, the user will be redirected back to `endpoint_path`. 
-    Requires Flask's `app.config.HOST` to be configured (ie. 'www.example.com'). 
+    Requires Flask's `app.config['HOST']` to be configured (ie. 'www.example.com'). 
     inputs:
+     - `app`: (Flask instance) 
      - `endpoint_path`: (str) path to return to after login (ie. '/index'). Can be result of `url_for`. 
     '''
     ## get host 
-    host = app.config.HOST 
+    host = app.config['HOST']  
     ## enforce formatting
     if not endpoint_path.startswith('/'): 
         endpoint_path = '/' + endpoint_path 
@@ -34,6 +34,7 @@ def redirect_to_login_and_return(endpoint_path: str):
     if not host.startswith('https://'): 
         host = 'https://' + host 
     ## construct redirects 
-    session['login_downstream'] = host + endpoint_path
-    return redirect(host + '/oauth2/login') 
+    login_downstream = host + endpoint_path
+    login_downstream = urllib.parse.urlencode({'login-downstream': login_downstream}) 
+    return redirect(host + '/oauth2/login?' + login_downstream) 
 

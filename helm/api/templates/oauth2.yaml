@@ -14,7 +14,7 @@ apiVersion: apps/v1
 metadata:
   name: oauth2-deployment
 spec:
-  replicas: {{ .Values.replicas }} 
+  replicas: 1
   selector:
     matchLabels:
       app: oauth2-deployment
