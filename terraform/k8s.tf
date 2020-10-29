@@ -1,40 +1,16 @@
-resource "google_container_cluster" "ha-demo-cluster" {
-  name     = "ha-demo-cluster"
-  location = "us-central1-a"
+resource "azurerm_kubernetes_cluster" "aks-cluster" {
+  name                = "ha-api-aks"
+  location            = azurerm_resource_group.ha_api_resource_group.location
+  resource_group_name = azurerm_resource_group.ha_api_resource_group.name
+  dns_prefix          = "ha-api-aks"
 
-  initial_node_count       = 3
-  
-  master_auth {
-    username = ""
-    password = ""
-    
-    client_certificate_config {
-      issue_client_certificate = false
-    }
+  default_node_pool {
+    name       = "default"
+    node_count = 2
+    vm_size    = "Standard_D2_v2"
   }
-  
-  addons_config {
-    http_load_balancing {
-      disabled = false
-    }
-  }
-  
-  node_config {
-    preemptible  = false
-    machine_type = "e2-standard-2"
 
-    metadata = {
-      disable-legacy-endpoints = "true"
-    }
-  
-    oauth_scopes = [
-      "https://www.googleapis.com/auth/devstorage.read_only",
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/servicecontrol",
-      "https://www.googleapis.com/auth/service.management.readonly",
-      "https://www.googleapis.com/auth/trace.append"
-    ]
+  identity {
+    type = "SystemAssigned"
   }
 }
-

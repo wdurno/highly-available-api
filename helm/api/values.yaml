@@ -1,7 +1,17 @@
 
 ## Number of API pods 
-apiReplicaCount: 1
+replicas: 3
 
-## Name of GCP project 
-project: gdax-dnn
+## Container names  
+api_image: ""
+oauth2_image: "" 
+
+## oauth2
+client_id: ""
+client_secret: ""
+tenant_id: ""
+cookie_token: ""
+
+## web domain, ie: www.example.com 
+host: ""
 

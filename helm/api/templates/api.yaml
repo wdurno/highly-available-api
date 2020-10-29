@@ -1,0 +1,43 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: api-service
+spec:
+  selector:
+    app: api-deployment
+  ports:
+    - port: 8080
+      targetPort: 5000
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: api-deployment
+spec:
+  replicas: {{ .Values.replicas }} 
+  selector:
+    matchLabels:
+      app: api-deployment
+  template:
+    metadata:
+      labels:
+        app: api-deployment
+    spec:
+      containers:
+        - name: api
+          image: {{ .Values.api_image }}
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /healthy
+              port: 5000
+          imagePullPolicy: Always
+          command:
+            - "python3"
+            - "-u"
+            - "api.py"
+            - "--host=https://{{ .Values.host }}"
+            - "--cookie-token={{ .Values.cookie_token }}"
+      imagePullSecrets:
+        - name: acr-creds
