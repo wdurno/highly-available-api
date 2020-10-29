@@ -5,6 +5,5 @@ export highly_available_api_subscription_id=""
 export highly_available_api_tenant_id=""
 export highly_available_api_client_id=""
 export highly_available_api_client_secret=""
-export highly_available_api_resource_group_name=""
-export highly_available_api_location=""
+export highly_available_api_resource_group_name="" ## www.example.com
 

@@ -3,6 +3,9 @@ from time import sleep
 
 wait=10
 
+## pod readiness not a great predictor, padding wait time...
+sleep(60) 
+
 for i in range(wait): 
     state = os.popen('kubectl get pods --all-namespaces | grep nginx').read()
     if 'Running' in state:
