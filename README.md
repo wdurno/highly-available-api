@@ -9,7 +9,7 @@ Deploy a stateless, highly-available API in Azure Kubernetes Servicei (AKS) with
 ## configure
 
 1. Setup an AAD envrionment, including a registered application with a `client_secret`.
-2. Find a domain name you can use.
+2. Choose an available domain name. 
 3. Copy `highly-available-api-config.sh` to `$HOME` and populate it. 
 
 ## build and deploy 
@@ -21,14 +21,14 @@ This demo is optimized for automation and illustration. Normally, build and prod
 Manual steps required for building and deployment:
 
 1. Run `bash build.sh` 
-2. You will be prompted to configure an auto-generated certificate. You need only provide your domain.
-3. Once the build is done, manually configure the Azure Public IP to expose your domain.
+2. Once the build is done, manually configure the Azure Public IP to expose your domain.
 
 ## demo
 
 Navigate to your domain and login. Watch the stateless, highly-available API count your visits and report the API pod name which serviced your request.
 ```
-{"pod_name": "xkymgqrrhp", "total_visits": 2}
+{"pod-name":"xkymgqrrhp","total-visits":"2"}
+{"pod-name":"nimslepznw","total-visits":"3"}
 ```
 
 ## clean-up 
@@ -38,6 +38,5 @@ Navigate to your domain and login. Watch the stateless, highly-available API cou
 
 ## potential improvements
 
-1. Certificate generation should be fully-automated.
-2. Public IP configuration should be fully-automated. 
+1. Public IP configuration should be fully-automated. 
 
